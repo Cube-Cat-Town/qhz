@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的第一个网页</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            margin: 0;
+        }
+        
+        .content {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>欢迎来到我的网页</h1>
+        <p>这是一个简单的网页示例</p>
+    </header>
+    
+    <div class="content">
+        <h2>关于网页开发</h2>
+        <p>网页开发是一项有趣且实用的技能。通过学习HTML、CSS和JavaScript，你可以创建美观且功能丰富的网站。</p>
+        
+        <h3>学习资源推荐</h3>
+        <ul>
+            <li>MDN Web文档</li>
+            <li>免费CodeCamp</li>
+            <li>各种在线教程和视频课程</li>
+        </ul>
+        
+        <button onclick="showMessage()">点击这里</button>
+    </div>
+    
+    <footer>
+        <p>我是电棍</p>
+    </footer>
+
+    <script>
+        function showMessage() {
+            alert('55555欢迎学习网页开发！');
+        }
+    </script>
+</body>
+</html>
