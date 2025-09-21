@@ -1,196 +1,142 @@
-body {
-  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f5f7fa;
-  color: #333;
-}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天津大学校庆浏览系统</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* 你的原 CSS 不变 */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <i class="fas fa-university"></i>
+      </div>
+      <h1 class="title">管理端操作</h1>
+      <p class="subtitle">天津大学校庆浏览系统 - 管理控制台</p>
+    </div>
+    <div class="input-area">
+      <div class="input-group">
+        <label for="command-input"><i class="fas fa-terminal"></i> 向APP发送的内容：</label>
+        <div class="input-wrapper">
+          <div id="command-input" class="editable" contenteditable="true" data-placeholder="请输入信息"></div>
+        </div>
+        <div class="toolbar">
+          <div class="tool-btn" onclick="formatText('bold')"><i class="fas fa-bold"></i></div>
+          <div class="tool-btn" onclick="formatText('italic')"><i class="fas fa-italic"></i></div>
+          <div class="tool-btn" onclick="formatText('underline')"><i class="fas fa-underline"></i></div>
+          <div class="tool-btn" onclick="insertBullet()"><i class="fas fa-list-ul"></i></div>
+          <div class="tool-btn" onclick="insertNumber()"><i class="fas fa-list-ol"></i></div>
+        </div>
+      </div>
+      <div class="btn-group">
+        <button id="send-btn" onclick="sendCommand()">
+          <i class="fas fa-paper-plane"></i> 发送指令
+        </button>
+        <button class="btn-clear" onclick="clearContent()">
+          <i class="fas fa-trash-alt"></i> 清空内容
+        </button>
+      </div>
+    </div>
+    <div class="output">
+      <h3><i class="fas fa-history"></i> 发送记录</h3>
+      <div class="output-content" id="output-content">
+        <p class="empty-output">发送结果将显示在这里</p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <p>校庆浏览系统 | 管理端</p>
+    <div class="university-info">
+      <span><i class="fas fa-map-marker-alt"></i> 天津大学卫津路校区</span>
+    </div>
+  </div>
 
-.container {
-  max-width: 900px;
-  margin: 40px auto;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  padding: 30px;
-}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const editableDiv = document.getElementById('command-input');
+      editableDiv.addEventListener('input', function () {
+        localStorage.setItem('tjuCommand', this.innerHTML);
+      });
+      if (localStorage.getItem('tjuCommand')) {
+        editableDiv.innerHTML = localStorage.getItem('tjuCommand');
+      }
+      editableDiv.addEventListener('keydown', function (e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+          e.preventDefault();
+          sendCommand();
+        }
+      });
+    });
 
-.header {
-  text-align: center;
-  margin-bottom: 30px;
-}
+    async function sendCommand() {
+      const commandInput = document.getElementById('command-input');
+      const outputContent = document.getElementById('output-content');
+      if (commandInput.innerText.trim() === '') {
+        outputContent.innerHTML = '<p class="error"><i class="fas fa-exclamation-circle"></i> 错误：请输入有效指令！</p>';
+        return;
+      }
+      const command = commandInput.innerText.trim();
 
-.header .logo {
-  font-size: 40px;
-  color: #0057b8;
-  margin-bottom: 10px;
-}
+      try {
+        // 发送到 Spring Boot 后端
+        let response = await fetch("http://localhost:8080/api/messages", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ content: command })
+});
 
-.title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #0057b8;
-  margin: 5px 0;
-}
 
-.subtitle {
-  font-size: 15px;
-  color: #666;
-}
+        if (!response.ok) {
+          throw new Error("网络错误，状态码：" + response.status);
+        }
 
-.input-area {
-  margin-bottom: 30px;
-}
+        let result = await response.json();
 
-.input-group label {
-  font-weight: 600;
-  display: block;
-  margin-bottom: 10px;
-  color: #444;
-}
+        const now = new Date();
+        const timestamp = now.toLocaleString('zh-CN');
 
-.input-wrapper {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
-  min-height: 100px;
-  padding: 12px;
-  transition: border-color 0.2s ease;
-}
+        outputContent.innerHTML =
+          `<div class="output-item">
+            <div class="output-header">
+              <span style="color: #0057b8; font-weight: 600;"><i class="fas fa-terminal"></i> 指令执行结果</span>
+              <span style="color: #777; font-size: 0.9em;">${timestamp}</span>
+            </div>
+            <p><i class="fas fa-check-circle" style="color: #28a745;"></i> 已保存到数据库</p>
+            <p>服务器返回消息：${result.message}</p>
+          </div>` + outputContent.innerHTML;
 
-.input-wrapper:focus-within {
-  border-color: #0057b8;
-  background: #fff;
-}
+      } catch (error) {
+        outputContent.innerHTML =
+          `<p class="error"><i class="fas fa-exclamation-circle"></i> 发送失败：${error.message}</p>`;
+      }
+    }
 
-.editable {
-  min-height: 80px;
-  outline: none;
-}
+    function clearContent() {
+      const commandInput = document.getElementById('command-input');
+      const outputContent = document.getElementById('output-content');
+      commandInput.innerHTML = '';
+      outputContent.innerHTML = '<p class="empty-output">指令执行结果将显示在这里...</p>';
+      localStorage.removeItem('tjuCommand');
+    }
 
-.editable:empty:before {
-  content: attr(data-placeholder);
-  color: #aaa;
-}
+    function formatText(format) {
+      document.execCommand(format, false, null);
+      document.getElementById('command-input').focus();
+    }
 
-.toolbar {
-  display: flex;
-  gap: 8px;
-  margin: 10px 0;
-}
+    function insertBullet() {
+      document.execCommand('insertUnorderedList', false, null);
+      document.getElementById('command-input').focus();
+    }
 
-.tool-btn {
-  background: #f0f0f0;
-  border-radius: 6px;
-  padding: 6px 10px;
-  cursor: pointer;
-  color: #444;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.tool-btn:hover {
-  background: #0057b8;
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.btn-group {
-  margin-top: 15px;
-  display: flex;
-  gap: 15px;
-}
-
-#send-btn {
-  background: #0057b8;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-}
-
-#send-btn:hover {
-  background: #004299;
-  transform: scale(1.05);
-}
-
-.btn-clear {
-  background: #e74c3c;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.btn-clear:hover {
-  background: #c0392b;
-  transform: scale(1.05);
-}
-
-.output {
-  margin-top: 25px;
-}
-
-.output h3 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #0057b8;
-}
-
-.output-content {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  background: #fafafa;
-  min-height: 80px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.output-item {
-  background: #fff;
-  border-left: 4px solid #0057b8;
-  padding: 12px 15px;
-  margin-bottom: 12px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.output-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-
-.error {
-  color: #e74c3c;
-  font-weight: 600;
-}
-
-.empty-output {
-  color: #999;
-  font-style: italic;
-}
-
-.footer {
-  text-align: center;
-  padding: 20px;
-  font-size: 14px;
-  margin-top: 30px;
-  color: #666;
-}
-
-.footer .university-info {
-  margin-top: 5px;
-  font-size: 13px;
-  color: #999;
-}
+    function insertNumber() {
+      document.execCommand('insertOrderedList', false, null);
+      document.getElementById('command-input').focus();
+    }
+  </script>
+</body>
+</html>
