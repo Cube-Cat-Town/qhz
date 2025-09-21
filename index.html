@@ -6,7 +6,203 @@
   <title>天津大学校庆浏览系统</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* 你的原 CSS 不变 */
+    body {
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f7fa;
+  color: #333;
+}
+
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header .logo {
+  font-size: 40px;
+  color: #0057b8;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0057b8;
+  margin: 5px 0;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #666;
+}
+
+.input-area {
+  margin-bottom: 30px;
+}
+
+.input-group label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.input-wrapper {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  min-height: 100px;
+  padding: 12px;
+  transition: border-color 0.2s ease;
+}
+
+.input-wrapper:focus-within {
+  border-color: #0057b8;
+  background: #fff;
+}
+
+.editable {
+  min-height: 80px;
+  outline: none;
+}
+
+.editable:empty:before {
+  content: attr(data-placeholder);
+  color: #aaa;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.tool-btn {
+  background: #f0f0f0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: #444;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.tool-btn:hover {
+  background: #0057b8;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-group {
+  margin-top: 15px;
+  display: flex;
+  gap: 15px;
+}
+
+#send-btn {
+  background: #0057b8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+#send-btn:hover {
+  background: #004299;
+  transform: scale(1.05);
+}
+
+.btn-clear {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-clear:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+.output {
+  margin-top: 25px;
+}
+
+.output h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0057b8;
+}
+
+.output-content {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background: #fafafa;
+  min-height: 80px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.output-item {
+  background: #fff;
+  border-left: 4px solid #0057b8;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.empty-output {
+  color: #999;
+  font-style: italic;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  margin-top: 30px;
+  color: #666;
+}
+
+.footer .university-info {
+  margin-top: 5px;
+  font-size: 13px;
+  color: #999;
+}
+
   </style>
 </head>
 <body>
